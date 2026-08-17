@@ -129,11 +129,16 @@ if should_run:
     else:
         st.markdown("---")
         
-        # Simple Loading Spinner
-        with st.spinner("Searching for answer..."):
+        # Prominent Instant Banner + Spinner
+        status_box = st.empty()
+        status_box.info("⏳ Searching 3GPP TS 23.501 specification for answer...")
+        
+        with st.spinner("Processing query..."):
             start_time = time.time()
             result = pipeline.query(query_text, debug=False)
             elapsed = time.time() - start_time
+            
+        status_box.empty()  # Clear status banner when done
 
         # Render Response
         if result.abstained:
