@@ -1,37 +1,13 @@
-# =============================================================================
-# 3GPP RAG Chatbot — Complete System Dependencies
-# Optimized for Streamlit Community Cloud & Production FastAPI
-# =============================================================================
-
 streamlit>=1.30.0
-
-# ── Core framework ────────────────────────────────────────────────────────────
-fastapi>=0.111.0
-uvicorn[standard]>=0.30.0
-pydantic>=2.7.0
-pydantic-settings>=2.3.0
-python-dotenv>=1.0.1
-
-# ── LangChain ─────────────────────────────────────────────────────────────────
 langchain>=0.2.0
 langchain-core>=0.2.0
 langchain-community>=0.2.0
-langchain-openai>=0.1.0
-
-# ── PDF extraction ────────────────────────────────────────────────────────────
 pymupdf>=1.24.0
-pdfplumber>=0.11.0
-
-# ── Embeddings & PyTorch ──────────────────────────────────────────────────────
 sentence-transformers>=3.0.0
 torch>=2.2.0
-
-# ── Vector store ──────────────────────────────────────────────────────────────
 chromadb>=0.5.0
-
-# ── BM25 ──────────────────────────────────────────────────────────────────────
 rank-bm25>=0.2.2
-
-# ── Utilities ─────────────────────────────────────────────────────────────────
-tqdm>=4.66.0
+python-dotenv>=1.0.1
+pydantic>=2.7.0
 numpy>=1.26.0
+tqdm>=4.66.0
