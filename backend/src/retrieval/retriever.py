@@ -44,6 +44,22 @@ logger = logging.getLogger(__name__)
 BM25_INDEX_PATH = BASE_DIR / "bm25_index.pkl"
 
 
+import gc
+import os
+
+# ── Memory Optimization for Low-RAM Cloud Environments (Render 512MB limit) ───
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+
+try:
+    import torch
+    torch.set_num_threads(1)
+    torch.set_grad_enabled(False)
+except Exception:
+    pass
+
+
 # ── 1. Embeddings Factory ──────────────────────────────────────────────────────
 
 def get_embedding_function():
@@ -53,11 +69,13 @@ def get_embedding_function():
     except ImportError:
         from langchain_community.embeddings import HuggingFaceEmbeddings
 
-    return HuggingFaceEmbeddings(
+    embed = HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL,
         model_kwargs={"device": EMBEDDING_DEVICE},
-        encode_kwargs={"normalize_embeddings": True, "batch_size": 32},
+        encode_kwargs={"normalize_embeddings": True, "batch_size": 8},
     )
+    gc.collect()
+    return embed
 
 
 # ── 2. BM25 Tokenizer & Utilities ─────────────────────────────────────────────
@@ -117,6 +135,7 @@ class HybridRetriever:
             from sentence_transformers import CrossEncoder
             logger.info(f"Loading Cross-Encoder model: {RERANKER_MODEL}")
             self._reranker = CrossEncoder(RERANKER_MODEL)
+            gc.collect()
         return self._reranker
 
     # ── Indexing Methods (Used during Ingestion) ──────────────────────────────
