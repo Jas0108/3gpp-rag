@@ -97,25 +97,20 @@ submit_clicked = st.button("Ask Assistant", type="primary", use_container_width=
 
 st.markdown("---")
 
-# Sample Prompts Section (Below Question Typing Part)
+# Sample Prompts Section (Stacked vertically below text area)
 st.caption("Try asking:")
 
-col1, col2, col3 = st.columns(3)
+if st.button("Tell me about UE radio Capability Management Function (UCMF)", use_container_width=True):
+    st.session_state["user_query"] = "Tell me about UE radio Capability Management Function (UCMF)"
+    st.rerun()
 
-with col1:
-    if st.button("Tell me about UE radio Capability Management Function (UCMF)", use_container_width=True):
-        st.session_state["user_query"] = "Tell me about UE radio Capability Management Function (UCMF)"
-        st.rerun()
+if st.button("What are the Principles for Binding, Selection and Reselection?", use_container_width=True):
+    st.session_state["user_query"] = "What are the Principles for Binding, Selection and Reselection?"
+    st.rerun()
 
-with col2:
-    if st.button("What are the Principles for Binding, Selection and Reselection?", use_container_width=True):
-        st.session_state["user_query"] = "What are the Principles for Binding, Selection and Reselection?"
-        st.rerun()
-
-with col3:
-    if st.button("Tell me about Maximum Packet Loss Rate", use_container_width=True):
-        st.session_state["user_query"] = "Tell me about Maximum Packet Loss Rate"
-        st.rerun()
+if st.button("Tell me about Maximum Packet Loss Rate", use_container_width=True):
+    st.session_state["user_query"] = "Tell me about Maximum Packet Loss Rate"
+    st.rerun()
 
 # Execution & Results Section
 if submit_clicked:
