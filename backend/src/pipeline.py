@@ -28,6 +28,16 @@ class RAGPipeline:
     def __init__(self):
         self.retriever = HybridRetriever()
         self.generator = GroundedGenerator()
+        self._warmup()
+
+    def _warmup(self):
+        """Warm up vector store, BM25, and Cross-Encoder weights on initial engine startup."""
+        try:
+            _ = self.retriever.vector_store
+            _ = self.retriever.bm25
+            _ = self.retriever.reranker
+        except Exception as e:
+            logger.warning(f"Warmup warning: {e}")
 
     def query(self, question: str, debug: bool = False) -> ChatResponse:
         """

@@ -8,8 +8,15 @@ Usage:
 
 import sys
 import io
+import os
 import time
+import warnings
 from pathlib import Path
+
+# Suppress deprecation and verbosity warnings
+warnings.filterwarnings("ignore")
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+os.environ["TRANSFORMERS_VERBOSITY"] = "error"
 
 # Force UTF-8 encoding for Windows terminal
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
