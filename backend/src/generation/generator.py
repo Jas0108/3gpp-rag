@@ -91,31 +91,38 @@ def format_context(docs: List[Document]) -> str:
 
 def get_llm():
     """Returns configured LangChain ChatModel (OpenRouter / OpenAI / Gemini)."""
-    provider = LLM_PROVIDER.lower()
+    import src.config as cfg
+    
+    # Sanitize obsolete/broken model slugs on the fly
+    model_name = cfg.LLM_MODEL
+    if "llama-3.3-70b-instruct" in model_name:
+        model_name = "google/gemma-2-27b-it:free"
+
+    provider = cfg.LLM_PROVIDER.lower()
     if provider in ["openrouter", "openai"]:
         from langchain_openai import ChatOpenAI
-        base_url = LLM_BASE_URL or ("https://openrouter.ai/api/v1" if provider == "openrouter" else None)
+        base_url = cfg.LLM_BASE_URL or ("https://openrouter.ai/api/v1" if provider == "openrouter" else None)
         return ChatOpenAI(
-            model=LLM_MODEL,
-            api_key=LLM_API_KEY or "dummy",
+            model=model_name,
+            api_key=cfg.LLM_API_KEY or "dummy",
             base_url=base_url,
-            temperature=LLM_TEMPERATURE,
-            max_tokens=LLM_MAX_TOKENS,
+            temperature=cfg.LLM_TEMPERATURE,
+            max_tokens=cfg.LLM_MAX_TOKENS,
             default_headers={"HTTP-Referer": "https://github.com", "X-Title": "3GPP RAG Assistant"} if provider == "openrouter" else None,
         )
     elif provider == "google":
         from langchain_google_genai import ChatGoogleGenerativeAI
         return ChatGoogleGenerativeAI(
-            model=LLM_MODEL,
-            google_api_key=LLM_API_KEY,
-            temperature=LLM_TEMPERATURE,
-            max_output_tokens=LLM_MAX_TOKENS,
+            model=model_name,
+            google_api_key=cfg.LLM_API_KEY,
+            temperature=cfg.LLM_TEMPERATURE,
+            max_output_tokens=cfg.LLM_MAX_TOKENS,
         )
     else:
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(
-            model=LLM_MODEL,
-            api_key=LLM_API_KEY or "dummy",
+            model=model_name,
+            api_key=cfg.LLM_API_KEY or "dummy",
             base_url="https://openrouter.ai/api/v1",
         )
 
@@ -127,22 +134,14 @@ class GroundedGenerator:
     Handles evidence sufficiency gating, LangChain LCEL generation, and programmatic citation assembly.
     """
 
-    def __init__(self):
-        self._llm = None
-        self._chain = None
-
     @property
     def llm(self):
-        if self._llm is None:
-            self._llm = get_llm()
-        return self._llm
+        return get_llm()
 
     @property
     def chain(self):
         """LangChain LCEL Pipeline: RAG_PROMPT | LLM | StrOutputParser"""
-        if self._chain is None:
-            self._chain = RAG_PROMPT | self.llm | StrOutputParser()
-        return self._chain
+        return RAG_PROMPT | self.llm | StrOutputParser()
 
     def generate(
         self,
