@@ -64,7 +64,7 @@ st.markdown(
 )
 
 
-@st.cache_resource(show_spinner="Initializing 3GPP RAG Engine (ChromaDB + BM25 + BGE Embeddings)...")
+@st.cache_resource(show_spinner="Initializing 3GPP RAG Engine...")
 def get_pipeline():
     """Initializes and caches the RAG pipeline instance."""
     return RAGPipeline()
@@ -129,17 +129,11 @@ if should_run:
     else:
         st.markdown("---")
         
-        # Interactive Progress Indicator
-        with st.status("🔍 Searching 3GPP TS 23.501 specification...", expanded=True) as status:
-            st.write("🔎 Performing hybrid dense (BGE) + sparse (BM25) search...")
+        # Simple Loading Spinner
+        with st.spinner("Searching for answer..."):
             start_time = time.time()
-            
-            st.write("⚡ Reranking document candidates with Cross-Encoder...")
             result = pipeline.query(query_text, debug=False)
             elapsed = time.time() - start_time
-            
-            st.write("🤖 Verifying evidence gate & generating grounded response...")
-            status.update(label=f"✅ Complete (Processed in {elapsed:.2f}s)", state="complete", expanded=False)
 
         # Render Response
         if result.abstained:
@@ -147,7 +141,7 @@ if should_run:
             if result.abstain_reason:
                 st.caption(f"Reason: {result.abstain_reason}")
         else:
-            st.success("💡 **Grounded Answer**")
+            st.success(f"💡 **Grounded Answer** *(processed in {elapsed:.2f}s)*")
             st.markdown(result.answer)
 
             # Render Sources (Top 5)
