@@ -1,11 +1,4 @@
-# 📡 3GPP 5G Standards Assistant — Hallucination-Resistant RAG Engine
-
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B.svg)](https://streamlit.io/)
-[![LangChain](https://img.shields.io/badge/LangChain-LCEL-1C3C3C.svg)](https://www.langchain.com/)
-[![ChromaDB](https://img.shields.io/badge/VectorStore-ChromaDB-red.svg)](https://www.trychroma.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+# 3GPP 5G Standards Assistant — Hallucination-Resistant RAG Engine
 
 A production-grade, hallucination-resistant **Retrieval-Augmented Generation (RAG)** system designed specifically for answering complex technical inquiries against **3GPP TS 23.501 V18.12.0** (*5G System Architecture, Release 18*).
 
@@ -13,7 +6,7 @@ Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal 
 
 ---
 
-## 🌟 Key Technical Features
+## Key Technical Features
 
 1. **Multi-Query Decomposition & Acronym-Aware Hybrid Search**:
    - **Sub-Aspect Decomposition**: Decomposes complex telecom inquiries into sub-queries for parallel retrieval.
@@ -35,7 +28,7 @@ Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal 
 
 ---
 
-## 📐 System Architecture
+## System Architecture
 
 ```
                        3GPP TS 23.501 PDF (721 pages)
@@ -74,7 +67,7 @@ Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal 
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 3gpp-rag-chatbot/
@@ -109,7 +102,7 @@ Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal 
 
 ---
 
-## 📊 Benchmark Evaluation Metrics
+## Benchmark Evaluation Metrics
 
 Evaluated across a 50-question benchmark dataset (35 in-scope technical questions, 15 out-of-scope / adversarial questions):
 
@@ -121,7 +114,7 @@ Evaluated across a 50-question benchmark dataset (35 in-scope technical question
 
 ---
 
-## 🚀 Quickstart & Setup
+## Quickstart & Setup
 
 ### 1. Prerequisites & Installation
 Clone the repository and install dependencies:
@@ -157,17 +150,17 @@ Navigate into `backend` and launch the FastAPI server:
 cd backend
 uvicorn api.main:app --reload --port 8000
 ```
-- 🌐 **Web Interface**: Open **`http://localhost:8000`**
-- 📑 **Interactive API Docs**: **`http://localhost:8000/docs`**
+- **Web Interface**: Open **`http://localhost:8000`**
+- **Interactive API Docs**: **`http://localhost:8000/docs`**
 
 ---
 
-## ☁️ 1-Click Cloud Deployment (Streamlit Community Cloud)
+## 1-Click Cloud Deployment (Streamlit Community Cloud)
 
-To deploy a live hosted version for interviewers (100% Free • 1 GB RAM):
+To deploy a live hosted version for interviewers (100% Free - 1 GB RAM):
 1. Push your repository to GitHub.
-2. Sign in at **[share.streamlit.io](https://share.streamlit.io/)**.
-3. Create App ➡️ Select `Jas0108/3gpp-rag` ➡️ Main file path: `streamlit_app.py`.
+2. Sign in at **share.streamlit.io**.
+3. Create App -> Select `Jas0108/3gpp-rag` -> Main file path: `streamlit_app.py`.
 4. In **Advanced settings... Secrets**, add:
    ```toml
    LLM_PROVIDER = "openrouter"
@@ -177,7 +170,7 @@ To deploy a live hosted version for interviewers (100% Free • 1 GB RAM):
 
 ---
 
-## 🔌 API Reference
+## API Reference
 
 ### `POST /api/chat`
 Process a technical question and return a grounded answer with top-5 section and page citations.
@@ -191,6 +184,6 @@ Process a technical question and return a grounded answer with top-5 section and
 
 ---
 
-## 🛡️ License
+## License
 
 Distributed under the MIT License. See `LICENSE` for details.
