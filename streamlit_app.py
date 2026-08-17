@@ -119,7 +119,7 @@ if submit_clicked:
     else:
         with st.spinner("Searching 3GPP TS 23.501 specification & verifying evidence..."):
             start_time = time.time()
-            result = pipeline.answer_question(question.strip(), debug=False)
+            result = pipeline.query(question.strip(), debug=False)
             elapsed = time.time() - start_time
 
         st.markdown("---")
