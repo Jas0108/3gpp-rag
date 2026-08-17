@@ -1,0 +1,39 @@
+# =============================================================================
+# 3GPP RAG Chatbot — Python Dependencies
+# Install: pip install -r requirements.txt
+# Python 3.11+ required
+# =============================================================================
+
+# ── Core framework ────────────────────────────────────────────────────────────
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.7.0
+pydantic-settings>=2.3.0
+python-dotenv>=1.0.1
+
+# ── LangChain ─────────────────────────────────────────────────────────────────
+langchain>=0.2.0
+langchain-core>=0.2.0
+langchain-community>=0.2.0
+langchain-openai>=0.1.0          # optional — swap for langchain-google-genai etc.
+
+# ── PDF extraction ────────────────────────────────────────────────────────────
+pymupdf>=1.24.0                  # fitz — primary PDF extractor
+pdfplumber>=0.11.0               # table extraction fallback
+
+# ── Embeddings ────────────────────────────────────────────────────────────────
+sentence-transformers>=3.0.0
+torch>=2.3.0                     # CPU-only fine for retrieval models
+
+# ── Vector store ──────────────────────────────────────────────────────────────
+chromadb>=0.5.0
+
+# ── BM25 ──────────────────────────────────────────────────────────────────────
+rank-bm25>=0.2.2
+
+# ── Reranking ─────────────────────────────────────────────────────────────────
+# cross-encoder is part of sentence-transformers
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+tqdm>=4.66.0
+numpy>=1.26.0

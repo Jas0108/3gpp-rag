@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Environment
+.env
+
+# ChromaDB (generated, can be rebuilt from PDF)
+chroma_db/
+
+# Evaluation results (generated)
+evaluation/results.json
+
+# BM25 index (generated)
+bm25_index.pkl
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp / scratch
+diagnose_*.py
