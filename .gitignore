@@ -15,14 +15,9 @@ env/
 # Environment
 .env
 
-# ChromaDB (generated, can be rebuilt from PDF)
-chroma_db/
-
 # Evaluation results (generated)
 evaluation/results.json
 
-# BM25 index (generated)
-bm25_index.pkl
 
 # Logs
 *.log

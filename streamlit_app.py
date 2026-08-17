@@ -64,16 +64,10 @@ st.markdown(
 )
 
 
-@st.cache_resource(show_spinner="Initializing 3GPP RAG Engine & Ingesting PDF Specification...")
+@st.cache_resource(show_spinner="Loading 3GPP Assistant...")
 def get_pipeline():
     """Initializes and caches the RAG pipeline instance."""
-    pipe = RAGPipeline()
-    # If vector index is empty (fresh clone), run ingestion automatically
-    if pipe.chunk_count() == 0:
-        from backend.src.ingestion.ingest import run_ingestion
-        run_ingestion()
-        pipe = RAGPipeline()
-    return pipe
+    return RAGPipeline()
 
 
 # Application Header
