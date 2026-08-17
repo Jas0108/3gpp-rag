@@ -68,7 +68,7 @@ EVIDENCE_MIN_CHUNKS: int = int(os.getenv("EVIDENCE_MIN_CHUNKS", "1"))
 
 # ── LLM ───────────────────────────────────────────────────────────────────────
 LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "openrouter")   # openrouter | openai | google
-LLM_MODEL: str = os.getenv("LLM_MODEL", "openai/gpt-oss-20b:free")
+LLM_MODEL: str = os.getenv("LLM_MODEL", "meta-llama/llama-3.1-8b-instruct:free")
 LLM_API_KEY: str = os.getenv("LLM_API_KEY", "")
 LLM_BASE_URL: str = os.getenv("LLM_BASE_URL", "")
 LLM_TEMPERATURE: float = float(os.getenv("LLM_TEMPERATURE", "0.0"))
