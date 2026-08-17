@@ -1,12 +1,11 @@
-# 3GPP 5G Standards Assistant — Hallucination-Resistant RAG Backend
-
+# 3GPP 5G Standards Assistant 
 A clean, production-quality **Retrieval-Augmented Generation (RAG)** backend that answers technical questions using **only** the 3GPP TS 23.501 V18.12.0 specification as its knowledge source.
 
 Designed with **LangChain** and a multi-stage **Evidence Sufficiency Gate**, it guarantees that the system **refuses to answer out-of-scope questions** instead of hallucinating.
 
 ---
 
-## 🎯 Key Design Features
+## Key Design Features
 
 1. **Section-Aware PDF Ingestion**: Extracts text page-by-page and parses 3GPP hierarchy (`4.2.2 Network Functions...`) accurately, preserving page numbers and section metadata.
 2. **Hybrid Retrieval (Dense + BM25)**:
@@ -20,7 +19,7 @@ Designed with **LangChain** and a multi-stage **Evidence Sufficiency Gate**, it 
 
 ---
 
-## 📐 Architecture Overview
+## Architecture Overview
 
 ```
                  3GPP TS 23.501 PDF (721 pages)
@@ -56,7 +55,7 @@ Designed with **LangChain** and a multi-stage **Evidence Sufficiency Gate**, it 
 
 ---
 
-## 📁 Clean Repository Structure
+## Repository Structure
 
 ```
 3gpp-rag-chatbot/
@@ -87,7 +86,7 @@ Designed with **LangChain** and a multi-stage **Evidence Sufficiency Gate**, it 
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 ### 1. Install Dependencies
 ```bash
@@ -114,12 +113,12 @@ From the `backend` directory:
 cd backend
 uvicorn api.main:app --reload --port 8000
 ```
-- 🌐 **Frontend Web Interface**: Open `http://localhost:8000` in your browser (or open `frontend/index.html` directly).
-- 📑 **Interactive API Docs**: `http://localhost:8000/docs`
+- **Frontend Web Interface**: Open `http://localhost:8000` in your browser (or open `frontend/index.html` directly).
+- **Interactive API Docs**: `http://localhost:8000/docs`
 
 ---
 
-## 🧪 Evaluation Benchmark
+## Evaluation Benchmark
 
 Run the automated evaluation against the 50-question benchmark dataset:
 ```bash
