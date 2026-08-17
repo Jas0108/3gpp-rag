@@ -63,7 +63,7 @@ CONTEXT_EXPAND_ENABLED: bool = os.getenv(
 CONTEXT_EXPAND_WINDOW: int = int(os.getenv("CONTEXT_EXPAND_WINDOW", "1"))
 
 # ── Evidence sufficiency gate ─────────────────────────────────────────────────
-EVIDENCE_THRESHOLD: float = float(os.getenv("EVIDENCE_THRESHOLD", "0.15"))
+EVIDENCE_THRESHOLD: float = float(os.getenv("EVIDENCE_THRESHOLD", "0.01"))
 EVIDENCE_MIN_CHUNKS: int = int(os.getenv("EVIDENCE_MIN_CHUNKS", "1"))
 
 # ── LLM ───────────────────────────────────────────────────────────────────────

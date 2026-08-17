@@ -220,6 +220,9 @@ class HybridRetriever:
             "AUSF": "Authentication Server Function",
             "NRF": "Network Repository Function",
             "NSSF": "Network Slice Selection Function",
+            "UCMF": "UE Radio Capability Management Function",
+            "MBSR": "Multicast Broadcast Service Repeater Relay Authorization",
+            "MBS": "Multicast Broadcast Service",
             "5QI": "5G QoS Indicator",
             "QOS": "Quality of Service",
             "GBR": "Guaranteed Bit Rate",
@@ -280,12 +283,16 @@ class HybridRetriever:
     def _rerank(
         self, query: str, candidates: List[Document], top_k: int = 5
     ) -> Tuple[List[Document], List[float]]:
-        """Reranks document candidates using Cross-Encoder."""
+        """Reranks document candidates using Cross-Encoder with Sigmoid normalization."""
+        import math
         if not candidates:
             return [], []
 
         pairs = [(query, doc.page_content) for doc in candidates]
-        scores = [float(s) for s in self.reranker.predict(pairs)]
+        raw_scores = [float(s) for s in self.reranker.predict(pairs)]
+        
+        # Apply Sigmoid to normalize logits into [0, 1] range
+        scores = [1.0 / (1.0 + math.exp(-s)) for s in raw_scores]
 
         # Pair candidates with scores and sort descending
         scored_candidates = sorted(zip(candidates, scores), key=lambda x: x[1], reverse=True)[:top_k]
