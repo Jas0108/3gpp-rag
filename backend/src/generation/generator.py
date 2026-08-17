@@ -14,22 +14,13 @@ from __future__ import annotations
 import json
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
-from src.config import (
-    EVIDENCE_MIN_CHUNKS,
-    EVIDENCE_THRESHOLD,
-    LLM_API_KEY,
-    LLM_BASE_URL,
-    LLM_MAX_TOKENS,
-    LLM_MODEL,
-    LLM_PROVIDER,
-    LLM_TEMPERATURE,
-)
+import src.config as cfg
 from src.schemas import SourceMetadata
 
 logger = logging.getLogger(__name__)
@@ -91,20 +82,16 @@ def format_context(docs: List[Document]) -> str:
 
 def get_llm():
     """Returns configured LangChain ChatModel (OpenRouter / OpenAI / Gemini)."""
-    import src.config as cfg
-    
-    # Sanitize obsolete/broken model slugs on the fly
-    model_name = cfg.LLM_MODEL
-    if "llama-3.3-70b-instruct" in model_name:
-        model_name = "google/gemma-2-27b-it:free"
-
     provider = cfg.LLM_PROVIDER.lower()
+    model_name = cfg.LLM_MODEL
+    api_key = cfg.LLM_API_KEY
+
     if provider in ["openrouter", "openai"]:
         from langchain_openai import ChatOpenAI
         base_url = cfg.LLM_BASE_URL or ("https://openrouter.ai/api/v1" if provider == "openrouter" else None)
         return ChatOpenAI(
             model=model_name,
-            api_key=cfg.LLM_API_KEY or "dummy",
+            api_key=api_key or "dummy",
             base_url=base_url,
             temperature=cfg.LLM_TEMPERATURE,
             max_tokens=cfg.LLM_MAX_TOKENS,
@@ -114,7 +101,7 @@ def get_llm():
         from langchain_google_genai import ChatGoogleGenerativeAI
         return ChatGoogleGenerativeAI(
             model=model_name,
-            google_api_key=cfg.LLM_API_KEY,
+            google_api_key=api_key,
             temperature=cfg.LLM_TEMPERATURE,
             max_output_tokens=cfg.LLM_MAX_TOKENS,
         )
@@ -122,7 +109,7 @@ def get_llm():
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(
             model=model_name,
-            api_key=cfg.LLM_API_KEY or "dummy",
+            api_key=api_key or "dummy",
             base_url="https://openrouter.ai/api/v1",
         )
 
@@ -205,10 +192,10 @@ class GroundedGenerator:
     @staticmethod
     def _check_evidence_gate(docs: List[Document], top_score: float) -> Tuple[bool, str]:
         """Prevents hallucination by refusing queries with low reranker scores or too few chunks."""
-        if len(docs) < EVIDENCE_MIN_CHUNKS:
-            return False, f"Too few relevant document chunks found ({len(docs)} < {EVIDENCE_MIN_CHUNKS})"
-        if top_score < EVIDENCE_THRESHOLD:
-            return False, f"Relevance score ({top_score:.3f}) below threshold ({EVIDENCE_THRESHOLD})"
+        if len(docs) < cfg.EVIDENCE_MIN_CHUNKS:
+            return False, f"Too few relevant document chunks found ({len(docs)} < {cfg.EVIDENCE_MIN_CHUNKS})"
+        if top_score < cfg.EVIDENCE_THRESHOLD:
+            return False, f"Relevance score ({top_score:.3f}) below threshold ({cfg.EVIDENCE_THRESHOLD})"
         return True, "Evidence sufficient"
 
     @staticmethod

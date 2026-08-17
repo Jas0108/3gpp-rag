@@ -2,7 +2,7 @@
 
 A **Retrieval-Augmented Generation (RAG)** chatbot designed specifically for answering complex technical inquiries against **3GPP TS 23.501 V18.12.0** (*5G System Architecture, Release 18*).
 
-Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal Rank Fusion), **Cross-Encoder Reranking**, an **Evidence Sufficiency Gate**, and dual deployment interfaces (**Streamlit Web App** & **FastAPI REST Service**).
+Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal Rank Fusion), **Cross-Encoder Reranking**, an **Evidence Sufficiency Gate**, and an **Interactive Terminal CLI**.
 
 ---
 
@@ -23,8 +23,8 @@ Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal 
 4. **Section-Aware Ingestion Pipeline**:
    - Parses PyMuPDF pages while preserving 3GPP hierarchical section structures (`5.2.18.2`, `5.4.4.1`) and page numbers.
 
-5. **Flexible Web UI & API Interface**:
-   - Includes both a Streamlit Cloud Web Application (`streamlit_app.py`) and a centered FastAPI web interface (`frontend/`).
+5. **Interactive Terminal CLI**:
+   - Run inquiries directly in your local terminal via `python cli.py` with instant, grounded answers and exact page/section citations.
 
 ---
 
@@ -67,41 +67,6 @@ Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal 
 
 ---
 
-## Repository Structure
-
-```
-3gpp-rag-chatbot/
-├── backend/                      # Python Backend Service
-│   ├── api/
-│   │   └── main.py               # FastAPI REST API & static server
-│   ├── data/
-│   │   └── 23501-ic0.pdf         # 3GPP Specification corpus
-│   ├── evaluation/
-│   │   ├── questions.json        # 50-question benchmark dataset
-│   │   └── results.json          # Standardized metric outputs
-│   ├── src/
-│   │   ├── config.py             # Global settings & environment loader
-│   │   ├── schemas.py            # Pydantic v2 data models
-│   │   ├── pipeline.py           # End-to-end RAG orchestrator
-│   │   ├── ingestion/            # PyMuPDF parser & section chunker
-│   │   ├── retrieval/            # Hybrid multi-query retriever
-│   │   ├── generation/           # Evidence gate & LangChain generator
-│   │   └── evaluation/           # Benchmark evaluator tool
-│   ├── .env.example              # Environment key template
-│   └── requirements.txt          # Backend dependencies
-│
-├── frontend/                     # Fast HTML/CSS Web UI
-│   ├── index.html                # Centered, minimalistic layout
-│   ├── style.css                 # Dark glassmorphism styling
-│   └── app.js                    # Query handling & citation rendering
-│
-├── streamlit_app.py              # Streamlit Community Cloud Application
-├── .gitignore                    # Environment & index exclusions
-└── README.md
-```
-
----
-
 ## Benchmark Evaluation Metrics
 
 Evaluated across a 50-question benchmark dataset (35 in-scope technical questions, 15 out-of-scope / adversarial questions):
@@ -114,7 +79,7 @@ Evaluated across a 50-question benchmark dataset (35 in-scope technical question
 
 ---
 
-## Quickstart & Setup
+## Quickstart & Local Terminal Execution
 
 ### 1. Prerequisites & Installation
 Clone the repository and install dependencies:
@@ -128,59 +93,17 @@ pip install -r backend/requirements.txt
 Copy `backend/.env.example` to `backend/.env` and set your API key:
 ```env
 LLM_PROVIDER=openrouter
-LLM_MODEL=meta-llama/llama-3.3-70b-instruct:free
+LLM_MODEL=google/gemma-4-26b-a4b-it:free
 LLM_API_KEY=your_openrouter_api_key_here
 ```
 
-### 3. Run Ingestion (Indexes PDF Corpus)
-Run PDF extraction and build ChromaDB + BM25 indices:
+### 3. Run Interactive Terminal CLI
+To launch the interactive assistant directly in your terminal:
 ```bash
-python -m backend.src.ingestion.ingest
+python cli.py
 ```
 
-### 4. Launch Option A: Streamlit Web Application
-Run locally:
-```bash
-streamlit run streamlit_app.py
-```
-
-### 5. Launch Option B: FastAPI Server & Web UI
-Navigate into `backend` and launch the FastAPI server:
-```bash
-cd backend
-uvicorn api.main:app --reload --port 8000
-```
-- **Web Interface**: Open **`http://localhost:8000`**
-- **Interactive API Docs**: **`http://localhost:8000/docs`**
-
----
-
-## 1-Click Cloud Deployment (Streamlit Community Cloud)
-
-To deploy a live hosted version for interviewers (100% Free - 1 GB RAM):
-1. Push your repository to GitHub.
-2. Sign in at **share.streamlit.io**.
-3. Create App -> Select `Jas0108/3gpp-rag` -> Main file path: `streamlit_app.py`.
-4. In **Advanced settings... Secrets**, add:
-   ```toml
-   LLM_PROVIDER = "openrouter"
-   LLM_MODEL = "google/gemma-2-27b-it:free"
-   LLM_API_KEY = "your_actual_api_key"
-   ```
-
----
-
-## API Reference
-
-### `POST /api/chat`
-Process a technical question and return a grounded answer with top-5 section and page citations.
-
-**Request**:
-```json
-{
-  "question": "Tell me about UE radio Capability Management Function (UCMF)"
-}
-```
+Select a sample query (1–6) or type any custom technical question to get grounded answers with verified 3GPP section and page citations!
 
 ---
 
