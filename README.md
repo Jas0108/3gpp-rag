@@ -164,7 +164,7 @@ To deploy a live hosted version for interviewers (100% Free - 1 GB RAM):
 4. In **Advanced settings... Secrets**, add:
    ```toml
    LLM_PROVIDER = "openrouter"
-   LLM_MODEL = "meta-llama/llama-3.3-70b-instruct:free"
+   LLM_MODEL = "google/gemma-2-27b-it:free"
    LLM_API_KEY = "your_actual_api_key"
    ```
 

@@ -79,9 +79,9 @@ EVIDENCE_MIN_CHUNKS: int = int(os.getenv("EVIDENCE_MIN_CHUNKS", "1"))
 
 # ── LLM ───────────────────────────────────────────────────────────────────────
 LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "openrouter")   # openrouter | openai | google
-LLM_MODEL: str = os.getenv("LLM_MODEL", "meta-llama/llama-3.1-8b-instruct:free")
+LLM_MODEL: str = os.getenv("LLM_MODEL", "google/gemma-2-27b-it:free")
 if "llama-3.3-70b-instruct:free" in LLM_MODEL:
-    LLM_MODEL = "meta-llama/llama-3.1-8b-instruct:free"
+    LLM_MODEL = "google/gemma-2-27b-it:free"
 LLM_API_KEY: str = os.getenv("LLM_API_KEY", "")
 LLM_BASE_URL: str = os.getenv("LLM_BASE_URL", "")
 LLM_TEMPERATURE: float = float(os.getenv("LLM_TEMPERATURE", "0.0"))
