@@ -151,21 +151,56 @@ class GroundedGenerator:
                 "abstain_reason": gate_reason,
             }
 
-        # Step 2: Format Context & Invoke LangChain LCEL Chain
+        # Step 2: Format Context & Invoke LangChain LCEL Chain with Fallback Model Rotation
         context_str = format_context(docs)
-        try:
-            raw_response = self.chain.invoke({
-                "question": question,
-                "context": context_str,
-            })
-            parsed = self._parse_json_response(raw_response)
-        except Exception as e:
-            logger.error(f"LLM Generation failed: {e}")
+        
+        fallback_models = [
+            cfg.LLM_MODEL,
+            "nvidia/nemotron-3.5-lightning:free",
+            "liquid/lfm-2.5-2.6b:free",
+            "poolside/laguna-s-2.1:free",
+            "cohere/north-mini-code:free",
+        ]
+
+        # Deduplicate while preserving order
+        unique_models = []
+        for m in fallback_models:
+            if m not in unique_models:
+                unique_models.append(m)
+
+        last_error = None
+        parsed = None
+
+        for model_name in unique_models:
+            try:
+                from langchain_openai import ChatOpenAI
+                llm = ChatOpenAI(
+                    model=model_name,
+                    api_key=cfg.LLM_API_KEY or "dummy",
+                    base_url=cfg.LLM_BASE_URL or "https://openrouter.ai/api/v1",
+                    temperature=cfg.LLM_TEMPERATURE,
+                    max_tokens=cfg.LLM_MAX_TOKENS,
+                    default_headers={"HTTP-Referer": "https://github.com", "X-Title": "3GPP RAG Assistant"},
+                )
+                chain = RAG_PROMPT | llm | StrOutputParser()
+                raw_response = chain.invoke({
+                    "question": question,
+                    "context": context_str,
+                })
+                parsed = self._parse_json_response(raw_response)
+                break  # Successful generation!
+            except Exception as e:
+                err_str = str(e)
+                logger.warning(f"Model '{model_name}' failed ({err_str[:100]}...). Trying fallback model...")
+                last_error = e
+
+        if parsed is None:
+            logger.error(f"All LLM models failed. Last error: {last_error}")
             return {
                 "answer": ABSTAIN_MESSAGE,
                 "sources": self._build_citations(docs),
                 "abstained": True,
-                "abstain_reason": f"LLM Generation error: {e}",
+                "abstain_reason": f"LLM Generation error (All free models busy): {last_error}",
             }
 
         # Step 3: Handle LLM self-abstention or return grounded answer
