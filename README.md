@@ -2,7 +2,7 @@
 
 A **Retrieval-Augmented Generation (RAG)** chatbot designed specifically for answering complex technical inquiries against **3GPP TS 23.501 V18.12.0** (*5G System Architecture, Release 18*).
 
-Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal Rank Fusion), **Cross-Encoder Reranking**, an **Evidence Sufficiency Gate**, and an **Interactive FastAPI / Swagger API Service**.
+Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal Rank Fusion), **Cross-Encoder Reranking**, an **Evidence Sufficiency Gate**, an **Interactive Terminal Chatbot**, and **Swagger UI Documentation**.
 
 ---
 
@@ -23,8 +23,8 @@ Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal 
 4. **Section-Aware Ingestion Pipeline**:
    - Parses PyMuPDF pages while preserving 3GPP hierarchical section structures (`5.2.18.2`, `5.4.4.1`) and page numbers.
 
-5. **FastAPI & Interactive Swagger UI**:
-   - High-throughput REST API with interactive Swagger documentation (`/docs`) for testing inquiries directly in the browser or terminal via `curl`.
+5. **Terminal Chatbot (`python run.py`) & Swagger UI**:
+   - Run interactive queries directly in your terminal via `python run.py` or use FastAPI Swagger UI at `http://localhost:8000/docs`.
 
 ---
 
@@ -79,7 +79,7 @@ Evaluated across a 50-question benchmark dataset (35 in-scope technical question
 
 ---
 
-## Quickstart & Local FastAPI Execution
+## Quickstart & Execution
 
 ### 1. Prerequisites & Installation
 Clone the repository and install dependencies:
@@ -97,63 +97,18 @@ LLM_MODEL=google/gemma-4-26b-a4b-it:free
 LLM_API_KEY=your_openrouter_api_key_here
 ```
 
-### 3. Launch FastAPI Backend
-From the project root directory, launch the Uvicorn server:
+### 3. Launch Terminal Chatbot (Recommended)
+Launch the interactive terminal chatbot:
+```bash
+python run.py
+```
+
+### 4. Launch FastAPI & Swagger UI (Optional)
+To launch the FastAPI REST service and interactive Swagger docs:
 ```bash
 uvicorn backend.api.main:app --reload --port 8000
 ```
-
----
-
-## Interactive Swagger UI & Terminal Execution
-
-### Option A: Interactive Swagger UI
-Open your browser to: **`http://localhost:8000/docs`**
-- Click **`POST /api/chat`** ➡️ **Try it out**
-- Enter your question JSON payload and click **Execute**!
-
-### Option B: Query via Terminal (`curl`)
-Execute questions directly in your terminal:
-
-```bash
-curl -X POST "http://localhost:8000/api/chat" \
-     -H "Content-Type: application/json" \
-     -d "{\"question\": \"Tell me about UE radio Capability Management Function (UCMF)\"}"
-```
-
----
-
-## API Reference
-
-### `POST /api/chat`
-Process a technical question and return a grounded answer with top-5 section and page citations.
-
-**Request Payload**:
-```json
-{
-  "question": "Tell me about UE radio Capability Management Function (UCMF)"
-}
-```
-
-**Response Payload**:
-```json
-{
-  "answer": "The UE radio Capability Management Function (UCMF) is used for the storage of dictionary entries...",
-  "sources": [
-    {
-      "specification": "3GPP TS 23.501",
-      "release": "18",
-      "version": "V18.12.0",
-      "section": "6.2.21",
-      "section_title": "UE radio Capability Management Function (UCMF)",
-      "page_start": 536,
-      "page_end": 536
-    }
-  ],
-  "abstained": false,
-  "abstain_reason": null
-}
-```
+Open **`http://localhost:8000/docs`** in your browser.
 
 ---
 
