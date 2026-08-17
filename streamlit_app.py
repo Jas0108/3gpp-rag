@@ -83,34 +83,42 @@ except Exception as e:
 
 st.markdown("---")
 
-# Sample Prompts Section
-st.subheader("Try asking:")
+# User Query Input (Question Typing Part First)
+default_val = st.session_state.get("user_query", "")
+question = st.text_area(
+    "Ask a technical question about 5G specifications:",
+    value=default_val,
+    placeholder="e.g. Tell me about UE radio Capability Management Function (UCMF)",
+    height=100,
+)
+
+# Process Question Button
+submit_clicked = st.button("Ask Assistant", type="primary", use_container_width=True)
+
+st.markdown("---")
+
+# Sample Prompts Section (Below Question Typing Part)
+st.caption("Try asking:")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.button("Tell me about UE radio Capability Management Function (UCMF)", use_container_width=True):
         st.session_state["user_query"] = "Tell me about UE radio Capability Management Function (UCMF)"
+        st.rerun()
 
 with col2:
     if st.button("What are the Principles for Binding, Selection and Reselection?", use_container_width=True):
         st.session_state["user_query"] = "What are the Principles for Binding, Selection and Reselection?"
+        st.rerun()
 
 with col3:
     if st.button("Tell me about Maximum Packet Loss Rate", use_container_width=True):
         st.session_state["user_query"] = "Tell me about Maximum Packet Loss Rate"
+        st.rerun()
 
-# User Query Input
-default_val = st.session_state.get("user_query", "")
-question = st.text_area(
-    "Ask a technical question about 5G specifications:",
-    value=default_val,
-    placeholder="e.g. What is the role of the Access and Mobility Management Function (AMF)?",
-    height=100,
-)
-
-# Process Question Button
-if st.button("Ask Assistant", type="primary", use_container_width=True):
+# Execution & Results Section
+if submit_clicked:
     if not question.strip():
         st.warning("Please enter a question.")
     else:
