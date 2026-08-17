@@ -1,6 +1,6 @@
-# 3GPP 5G Standards Assistant — Hallucination-Resistant RAG Engine
+# 3GPP 5G Standards Assistant 
 
-A production-grade, hallucination-resistant **Retrieval-Augmented Generation (RAG)** system designed specifically for answering complex technical inquiries against **3GPP TS 23.501 V18.12.0** (*5G System Architecture, Release 18*).
+A **Retrieval-Augmented Generation (RAG)** system designed specifically for answering complex technical inquiries against **3GPP TS 23.501 V18.12.0** (*5G System Architecture, Release 18*).
 
 Equipped with a **Multi-Query Hybrid Search Engine** (Dense + BM25 + Reciprocal Rank Fusion), **Cross-Encoder Reranking**, an **Evidence Sufficiency Gate**, and dual deployment interfaces (**Streamlit Web App** & **FastAPI REST Service**).
 
