@@ -83,7 +83,7 @@ except Exception as e:
 
 st.markdown("---")
 
-# User Query Input (Question Typing Part First)
+# User Query Input
 default_val = st.session_state.get("user_query", "")
 question = st.text_area(
     "Ask a technical question about 5G specifications:",
@@ -102,34 +102,52 @@ st.caption("Try asking:")
 
 if st.button("Tell me about UE radio Capability Management Function (UCMF)", use_container_width=True):
     st.session_state["user_query"] = "Tell me about UE radio Capability Management Function (UCMF)"
+    st.session_state["auto_submit"] = True
     st.rerun()
 
 if st.button("What are the Principles for Binding, Selection and Reselection?", use_container_width=True):
     st.session_state["user_query"] = "What are the Principles for Binding, Selection and Reselection?"
+    st.session_state["auto_submit"] = True
     st.rerun()
 
 if st.button("Tell me about Maximum Packet Loss Rate", use_container_width=True):
     st.session_state["user_query"] = "Tell me about Maximum Packet Loss Rate"
+    st.session_state["auto_submit"] = True
     st.rerun()
 
+# Determine if search should trigger
+should_run = submit_clicked or st.session_state.get("auto_submit", False)
+if st.session_state.get("auto_submit", False):
+    st.session_state["auto_submit"] = False
+
 # Execution & Results Section
-if submit_clicked:
-    if not question.strip():
-        st.warning("Please enter a question.")
+if should_run:
+    query_text = question.strip() or st.session_state.get("user_query", "").strip()
+    
+    if not query_text:
+        st.warning("Please enter a question or click one of the sample queries.")
     else:
-        with st.spinner("Searching 3GPP TS 23.501 specification & verifying evidence..."):
-            start_time = time.time()
-            result = pipeline.query(question.strip(), debug=False)
-            elapsed = time.time() - start_time
-
         st.markdown("---")
+        
+        # Interactive Progress Indicator
+        with st.status("🔍 Searching 3GPP TS 23.501 specification...", expanded=True) as status:
+            st.write("🔎 Performing hybrid dense (BGE) + sparse (BM25) search...")
+            start_time = time.time()
+            
+            st.write("⚡ Reranking document candidates with Cross-Encoder...")
+            result = pipeline.query(query_text, debug=False)
+            elapsed = time.time() - start_time
+            
+            st.write("🤖 Verifying evidence gate & generating grounded response...")
+            status.update(label=f"✅ Complete (Processed in {elapsed:.2f}s)", state="complete", expanded=False)
 
+        # Render Response
         if result.abstained:
             st.error(f"🛡️ **Evidence Gate Triggered (Abstained)**\n\n{result.answer}")
             if result.abstain_reason:
                 st.caption(f"Reason: {result.abstain_reason}")
         else:
-            st.success(f"💡 **Grounded Answer** *(processed in {elapsed:.2f}s)*")
+            st.success("💡 **Grounded Answer**")
             st.markdown(result.answer)
 
             # Render Sources (Top 5)
