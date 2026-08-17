@@ -60,7 +60,7 @@ st.markdown(
     }
     </style>
     """,
-    unsafe_allow_scope=True,
+    unsafe_allow_html=True,
 )
 
 
@@ -151,5 +151,5 @@ if st.button("Ask Assistant", type="primary", use_container_width=True):
                             <div class="citation-sub">{sub_display}</div>
                         </div>
                         """,
-                        unsafe_allow_scope=True,
+                        unsafe_allow_html=True,
                     )
